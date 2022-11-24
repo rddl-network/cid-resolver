@@ -1,0 +1,2 @@
+REDIS_HOST=<ip/hostname>
+REDIS_AUTH=<password>
