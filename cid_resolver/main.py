@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from decouple import config
 
 
@@ -13,6 +13,12 @@ REDIS_AUTH = config("REDIS_AUTH")
 
 pool = redis.ConnectionPool(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_AUTH, db=0)
 redis_client = redis.Redis(connection_pool=pool)
+
+
+# health endpoint for Kubernetes
+@app.get("/")
+def get_health():
+    return Response(content="", status_code=200)
 
 
 @app.get("/entry/cid")
