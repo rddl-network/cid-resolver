@@ -13,7 +13,7 @@ jobs:
   Release_CID_Resolver:
     runs-on:
       - self-hosted
-      - org01
+      - rddl-network-01
 
     steps:
       - uses: actions/checkout@v3
