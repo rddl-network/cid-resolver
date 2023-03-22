@@ -23,7 +23,7 @@ async def resolve_cid(cid: str):
             raise HTTPException(status_code=404, detail="Item not found.")
         return {"cid": cid, "url": url}
     except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=420, detail="Connection to Redis server failed.")
+        raise HTTPException(status_code=420, detail="Connection to Redis server failed: {e}")
 
 
 @app.post("/entry")
@@ -32,4 +32,4 @@ async def register_cid(cid: str, url: str):
         redis_client.set(cid, url)
         return {}
     except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=420, detail="Connection to Redis server failed.")
+        raise HTTPException(status_code=420, detail="Connection to Redis server failed: {e}")
