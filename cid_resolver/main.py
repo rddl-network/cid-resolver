@@ -6,7 +6,7 @@ from decouple import config
 app = FastAPI()
 # https://fastapi.tiangolo.com/tutorial/cors/?h=%20cors#use-corsmiddleware
 origins = [
-    "https://explorer.rddl.io",
+    "*"
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -42,7 +42,7 @@ async def resolve_cid(cid: str):
             raise HTTPException(status_code=404, detail="Item not found.")
         return {"cid": cid, "url": url}
     except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=420, detail="Connection to Redis server failed: {e}")
+        raise HTTPException(status_code=420, detail=f"Connection to Redis server failed: {e}")
 
 
 @app.post("/entry")
@@ -51,4 +51,4 @@ async def register_cid(cid: str, url: str):
         redis_client.set(cid, url)
         return {}
     except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=420, detail="Connection to Redis server failed: {e}")
+        raise HTTPException(status_code=420, detail=f"Connection to Redis server failed: {e}")
