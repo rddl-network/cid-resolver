@@ -5,9 +5,7 @@ from decouple import config
 
 app = FastAPI()
 # https://fastapi.tiangolo.com/tutorial/cors/?h=%20cors#use-corsmiddleware
-origins = [
-    "*"
-]
+origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
