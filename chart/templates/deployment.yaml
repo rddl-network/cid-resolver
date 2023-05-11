@@ -29,6 +29,13 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          env:
+          - name: REDIS_HOST
+            value: "{{ .Values.redis.host }}"
+          - name: REDIS_PORT
+            value: "{{ .Values.redis.port }}"
+          - name: REDIS_AUTH
+            value: "{{ .Values.redis.auth }}"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
