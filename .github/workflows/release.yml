@@ -2,34 +2,52 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "Tag"
-        required: true
-        default: ""
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  packages: write
+  contents: write
 
 jobs:
-  Release:
-    runs-on:
-      - ubuntu-latest
-
+  publish-docker:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to GHCR
+        uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-
-      - name: Build and push images
-        uses: docker/build-push-action@v3
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GH_PACKAGE_DEPLOYMENT }}
+      - name: Docker meta
+        id: semver # you'll use this in the next step
+        uses: docker/metadata-action@v3
         with:
-          push: true
-          tags: "riddleandcode/cid-resolver:${{ github.event.inputs.tag }}"
-
-      - uses: rickstaa/action-create-tag@v1
+          images: |
+            ghcr.io/rddl-network/cid-resolver
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+      - name: Build and push
+        uses: docker/build-push-action@v2
         with:
-          tag: "${{ github.event.inputs.tag }}"
-          message: "${{ github.event.inputs.tag }}"
+          context: .
+          platforms: linux/amd64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.semver.outputs.tags }}
+          labels: ${{ steps.semver.outputs.labels }}
+
