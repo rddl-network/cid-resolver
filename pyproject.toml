@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cid-resolver"
-version = "0.1.1"
+version = "0.2.0"
 description = ""
 authors = ["Jürgen Eckel <juergen@riddleandcode.com>"]
 readme = "README.md"
@@ -12,11 +12,16 @@ python-decouple = "^3.6"
 fastapi = "^0.87.0"
 uvicorn = "^0.20.0"
 redis = "^4.4.4"
+pyjwt = "^2.7.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+python-multipart = "^0.0.6"
+planetmint-cryptoconditions = "^1.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
 pytest = "^7.2.0"
+httpx = "^0.24.1"
 
 [build-system]
 requires = ["poetry-core"]
