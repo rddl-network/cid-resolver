@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 from cid_resolver.config import REDIS_AUTH, REDIS_HOST, REDIS_PORT
-from cid_resolver.routers.auth import verify_jwt_token
 
 router = APIRouter(
     prefix="/entry",

@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from cid_resolver.main import app
 from cid_resolver.routers.cid import redis_client
@@ -29,11 +28,10 @@ def test_post_cid_outdated_bearer():
     assert response.status_code == 403
 
 
-def test_post_cid_proper_bearer(get_bearer2):
-    bearer = get_bearer2
+def test_post_cid_proper_bearer(bearer_token):
     response = client.post(
         "/entry/?cid=bafkreibklq6s67jlcni2alpkqmxuyz4kh65uefp6vltoglnrr6riezs4qi&url=%20https%3A%2F%2Fbafkreibklq6s67jlcni2alpkqmxuyz4kh65uefp6vltoglnrr6riezs4qi.ipfs.w3s.link",
-        headers={"Authorization": f"Bearer {bearer}"},
+        headers={"Authorization": f"Bearer {bearer_token}"},
     )
     assert response.status_code == 200
 

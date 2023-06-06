@@ -1,12 +1,10 @@
 import pytest
 import hashlib
-from cid_resolver.app.auth import create_challenge, create_access_token
 import pytest
 import hashlib
 from fastapi.testclient import TestClient
 from planetmint_cryptoconditions.crypto import Ed25519SigningKey
 from cid_resolver.main import app
-from cid_resolver.app.auth import challenges, verify_token
 
 
 def sign_challenge(challenge):
@@ -22,7 +20,7 @@ def sign_challenge(challenge):
 
 
 @pytest.fixture
-def get_bearer2():
+def bearer_token():
     client = TestClient(app)
     VK_B58_ILP = b"Gtbi6WQDB6wUePiZm8aYs5XZ5pUqx9jMMLvRVHPESTjU"
     response = client.get(f"auth?public_key={VK_B58_ILP.decode()}")

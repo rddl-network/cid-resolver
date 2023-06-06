@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.security.http import HTTPBearer
 from cid_resolver.app.JWTBearer import JWTBearer
 
-from cid_resolver.app.auth import verify_signed_challenge, create_challenge, verify_token
+from cid_resolver.app.auth import verify_signed_challenge, create_challenge
 
 router = APIRouter(
     prefix="/auth",
@@ -11,11 +11,6 @@ router = APIRouter(
 )
 
 get_bearer_token = HTTPBearer(auto_error=False)
-
-
-async def verify_jwt_token(token: str = Depends(get_bearer_token)) -> str:
-    public_key = verify_token(str)
-    return public_key
 
 
 @router.get("/", summary="request a challenge that is to be signed and posted.")
