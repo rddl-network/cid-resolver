@@ -15,6 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # health endpoint for Kubernetes
 @app.get("/")
 def get_health():
