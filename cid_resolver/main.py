@@ -20,5 +20,6 @@ app.add_middleware(
 def get_health():
     return Response(content="", status_code=200)
 
+
 app.include_router(auth.router)
 app.include_router(cid.router)

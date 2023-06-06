@@ -4,7 +4,7 @@ from typing import Dict
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from cid_resolver.config import AUTH_ACCESS_TOKEN_EXPIRE_MINUTES, AUTH_JWT_SECRET_KEY, AUTH_ALGORITHM   
+from cid_resolver.config import AUTH_ACCESS_TOKEN_EXPIRE_MINUTES, AUTH_JWT_SECRET_KEY, AUTH_ALGORITHM
 
 
 class JWTBearer(HTTPBearer):
@@ -33,23 +33,18 @@ class JWTBearer(HTTPBearer):
         if payload:
             isTokenValid = True
         return isTokenValid
-    
+
     @staticmethod
     def token_response(token: str):
-        return {
-            "access_token": token
-        }
-    
+        return {"access_token": token}
+
     @staticmethod
     def signJWT(public_key: str) -> Dict[str, str]:
-        payload = {
-            "public_key": public_key,
-            "expires": time.time() + AUTH_ACCESS_TOKEN_EXPIRE_MINUTES
-        }
+        payload = {"public_key": public_key, "expires": time.time() + AUTH_ACCESS_TOKEN_EXPIRE_MINUTES}
         token = jwt.encode(payload, AUTH_JWT_SECRET_KEY, algorithm=AUTH_ALGORITHM)
 
         return JWTBearer.token_response(token)
-    
+
     @staticmethod
     def decodeJWT(token: str) -> dict:
         try:

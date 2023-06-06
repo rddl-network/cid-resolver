@@ -1,6 +1,7 @@
 import hashlib
 from planetmint_cryptoconditions.crypto import Ed25519VerifyingKey
 
+
 def validate_signature_data_string(pub_key: str, signature: bytearray, data_string: str) -> bool:
     byte_string = bytes(data_string, "utf-8")
     hash_local = hashlib.sha256()
