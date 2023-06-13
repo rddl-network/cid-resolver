@@ -36,6 +36,10 @@ spec:
             value: "{{ .Values.redis.port }}"
           - name: REDIS_AUTH
             value: "{{ .Values.redis.auth }}"
+          - name: JWT_DOMAIN
+            value: "{{ .Values.jwt.domain }}"
+          - name: JWT_SECRET
+            value: "{{ .Values.jwt.secret }}"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

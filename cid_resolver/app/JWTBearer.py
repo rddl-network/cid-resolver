@@ -5,7 +5,7 @@ from typing import Dict
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from cid_resolver.config import AUTH_ACCESS_TOKEN_EXPIRE_MINUTES, AUTH_JWT_SECRET_KEY, AUTH_ALGORITHM, AUTH_DOMAIN
+from cid_resolver.config import JWT_ACCESS_TOKEN_EXPIRE_MINUTES, JWT_SECRET, JWT_ALGORITHM, JWT_DOMAIN
 
 
 class JWTBearer(HTTPBearer):
@@ -41,20 +41,20 @@ class JWTBearer(HTTPBearer):
 
     @staticmethod
     def _base64_decoded_secret() -> str:
-        return base64.b64decode(AUTH_JWT_SECRET_KEY).decode("utf-8")
+        return base64.b64decode(JWT_SECRET).decode("utf-8")
 
     @staticmethod
     def signJWT(public_key: str) -> Dict[str, str]:
-        payload = {"actor": f"{public_key}@{AUTH_DOMAIN}", "exp": time.time() + AUTH_ACCESS_TOKEN_EXPIRE_MINUTES}
+        payload = {"actor": f"{public_key}@{JWT_DOMAIN}", "exp": time.time() + JWT_ACCESS_TOKEN_EXPIRE_MINUTES}
 
-        token = jwt.encode(payload, JWTBearer._base64_decoded_secret(), algorithm=AUTH_ALGORITHM)
+        token = jwt.encode(payload, JWTBearer._base64_decoded_secret(), algorithm=JWT_ALGORITHM)
 
         return JWTBearer.token_response(token)
 
     @staticmethod
     def decodeJWT(token: str) -> dict:
         try:
-            decoded_token = jwt.decode(token, JWTBearer._base64_decoded_secret(), algorithms=[AUTH_ALGORITHM])
+            decoded_token = jwt.decode(token, JWTBearer._base64_decoded_secret(), algorithms=[JWT_ALGORITHM])
             return decoded_token if decoded_token["exp"] >= time.time() else None
         except:
             return {}
