@@ -59,6 +59,9 @@ redis:
   host: "redis-svc"
   port: 6379
   auth: "redispassword"
+jwt:
+  domain: "m2m.rddl.io"
+  secret: "jwtsecretkey"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

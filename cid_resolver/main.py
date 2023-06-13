@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
-from decouple import config
+
+from cid_resolver.routers import auth, cid
 
 
 app = FastAPI()
@@ -14,17 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-import redis
-
-
-REDIS_HOST = config("REDIS_HOST", "localhost")
-REDIS_PORT = config("REDIS_PORT", 6379)
-REDIS_AUTH = config("REDIS_AUTH")
-
-
-pool = redis.ConnectionPool(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_AUTH, db=0)
-redis_client = redis.Redis(connection_pool=pool)
-
 
 # health endpoint for Kubernetes
 @app.get("/")
@@ -32,21 +22,5 @@ def get_health():
     return Response(content="", status_code=200)
 
 
-@app.get("/entry/cid")
-async def resolve_cid(cid: str):
-    try:
-        url = redis_client.get(cid)
-        if not url:
-            raise HTTPException(status_code=404, detail="Item not found.")
-        return {"cid": cid, "url": url}
-    except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=420, detail=f"Connection to Redis server failed: {e}")
-
-
-@app.post("/entry")
-async def register_cid(cid: str, url: str):
-    try:
-        redis_client.set(cid, url)
-        return {}
-    except redis.exceptions.ConnectionError as e:
-        raise HTTPException(status_code=420, detail=f"Connection to Redis server failed: {e}")
+app.include_router(auth.router)
+app.include_router(cid.router)
