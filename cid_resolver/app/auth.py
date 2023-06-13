@@ -1,15 +1,7 @@
 import time
-from typing import Union, Any
-from jose import jwt
-from datetime import datetime
 import random
 from cid_resolver.app.verify_signature import validate_signature_data_string
 from cid_resolver.config import (
-    AUTH_JWT_REFRESH_SECRET_KEY,
-    AUTH_JWT_SECRET_KEY,
-    AUTH_ACCESS_TOKEN_EXPIRE_MINUTES,
-    AUTH_REFRESH_TOKEN_EXPIRE_MINUTES,
-    AUTH_ALGORITHM,
     AUTH_CHALLENGE_SIZE,
     AUTH_CHALLENGE_TIMEOUT_IN_SEC,
 )
@@ -18,7 +10,7 @@ challenges = {}
 
 
 def cleanup_pending_challenges():
-    for key in challenges:
+    for key in list(challenges.keys()):
         if challenges[key][1] + AUTH_CHALLENGE_TIMEOUT_IN_SEC < time.time():
             del challenges[key]
 

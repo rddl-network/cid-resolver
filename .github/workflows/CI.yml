@@ -32,8 +32,7 @@ jobs:
     env:
       REDIS_HOST: localhost
       REDIS_AUTH: ''
-      AUTH_JWT_SECRET_KEY: E9FMEP2OSRgslb0UZhjAEffdgrezrthtdzizuou9whNY3b7eDR
-      AUTH_JWT_REFRESH_SECRET_KEY: E9FMEP2OSRgslb0UZhjAE9whNYsdfsafsgrrewz3b7eDR
+      AUTH_JWT_SECRET_KEY: ZngzLUI1dFM5dXhTNEJTVnI1c2RQb1dsWm03YWtwMXo5UzRhSHBGWGhCZw==
 
     steps:
       - name: Check out repository code

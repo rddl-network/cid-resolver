@@ -4,6 +4,7 @@ from planetmint_cryptoconditions.crypto import Ed25519SigningKey
 from cid_resolver.main import app
 from cid_resolver.app.auth import challenges
 from cid_resolver.app.JWTBearer import JWTBearer
+from cid_resolver.config import AUTH_DOMAIN
 
 client = TestClient(app)
 
@@ -41,4 +42,5 @@ def test_challenge_response_cycle():
     jwt_response = client.post(f"auth?public_key={VK_B58_ILP.decode()}&signature={signature.decode()}")
     assert jwt_response.status_code == 200
 
-    assert JWTBearer.decodeJWT(jwt_response.json()["access_token"])["public_key"] == VK_B58_ILP.decode()
+    decoded_token = JWTBearer.decodeJWT(jwt_response.json()["access_token"])
+    assert decoded_token["actor"] == f"{VK_B58_ILP.decode()}@{AUTH_DOMAIN}"
