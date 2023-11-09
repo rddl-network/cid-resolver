@@ -1,5 +1,5 @@
 import time
-import random
+import secrets
 from cid_resolver.app.verify_signature import validate_signature_data_string
 from cid_resolver.config import (
     AUTH_CHALLENGE_SIZE,
@@ -22,7 +22,7 @@ def does_pub_key_belong_to_valid_actor(pub_key: str) -> bool:
 def create_challenge(pub_key: str) -> int:
     cleanup_pending_challenges()
     challenges[pub_key] = (
-        bytes([random.randint(0, 255) for _ in range(0, AUTH_CHALLENGE_SIZE)]),
+        bytes([secrets.randbelow(256) for _ in range(0, AUTH_CHALLENGE_SIZE)]),
         time.time(),
     )
     return challenges[pub_key][0]
