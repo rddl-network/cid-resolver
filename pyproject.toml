@@ -9,7 +9,7 @@ packages = [{include = "cid_resolver"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 python-decouple = "^3.6"
-fastapi = "^0.87.0"
+fastapi = "^0.109.1"
 uvicorn = "^0.20.0"
 redis = "^4.4.4"
 pyjwt = "^2.7.0"
