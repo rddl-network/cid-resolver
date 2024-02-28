@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.security.http import HTTPBearer
+from fastapi.responses import JSONResponse
 from cid_resolver.app.JWTBearer import JWTBearer
 
 from cid_resolver.app.auth import verify_signed_challenge, create_challenge, does_pub_key_belong_to_valid_actor
@@ -17,7 +18,7 @@ get_bearer_token = HTTPBearer(auto_error=False)
 async def get_challenge(public_key: str) -> str:
     if does_pub_key_belong_to_valid_actor(public_key):
         challenge = create_challenge(public_key)
-        return {"challenge": challenge.hex()}
+        return JSONResponse(content={"challenge": challenge.hex()})
     raise HTTPException(status_code=403, detail="Invalid public key.")
 
 
